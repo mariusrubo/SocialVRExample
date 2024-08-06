@@ -136,7 +136,7 @@ public class ServerLogicSimple : MonoBehaviour
     /// <summary>
     /// When a client provides an update on its own state, just relay that information to all other clients.
     /// </summary>
-    private void OnPlayerStateUpdateReceived(NetworkConnection conn, currentPlayerState msg, Channel channel)
+    private void OnPlayerStateUpdate(NetworkConnection conn, currentPlayerState msg, Channel channel)
     {
         // track position and rotation here on server too (although server never displays anything)
         if (Players.TryGetValue(msg.id, out ClientBasicData player))
@@ -163,7 +163,7 @@ public class ServerLogicSimple : MonoBehaviour
         if (serverManager != null)
         {
             serverManager.RegisterBroadcast<playerInfoForSpawn>(OnSpawnBroadcast);
-            serverManager.RegisterBroadcast<currentPlayerState>(OnPlayerStateUpdateReceived);
+            serverManager.RegisterBroadcast<currentPlayerState>(OnPlayerStateUpdate);
             InstanceFinder.NetworkManager.TransportManager.Transport.OnRemoteConnectionState += Transport_OnRemoteConnectionState;
         }
         else { Debug.Log("Broadcast could not be registered!"); }
@@ -175,7 +175,7 @@ public class ServerLogicSimple : MonoBehaviour
         if (serverManager != null)
         {
             serverManager.UnregisterBroadcast<playerInfoForSpawn>(OnSpawnBroadcast);
-            serverManager.UnregisterBroadcast<currentPlayerState>(OnPlayerStateUpdateReceived);
+            serverManager.UnregisterBroadcast<currentPlayerState>(OnPlayerStateUpdate);
             InstanceFinder.NetworkManager.TransportManager.Transport.OnRemoteConnectionState -= Transport_OnRemoteConnectionState;
         }
     }
